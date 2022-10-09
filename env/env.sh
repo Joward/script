@@ -3,11 +3,13 @@
 # exit on error
 set -e
 
-rm -rfv /home/mac/local/stow/tmux
 arr=( ncurses libevent tmux )
+# arr=( tmux )
 
 for tool in "${arr[@]}"
 do
+#   rm -rfv /home/mac/local/stow/$tool
+
     PREFIX=$HOME/local/stow/$tool
 
     if [ -d "${PREFIX}" ]; then
@@ -52,6 +54,10 @@ do
             tmux)  
                 ../configure --prefix=$PREFIX CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
                 CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib" make
+                ;;  
+            ncurses)  
+                ../configure --prefix=$PREFIX # --enable-widec
+                make
                 ;;  
             *)  
                 ../configure --prefix=$PREFIX
