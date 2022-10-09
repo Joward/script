@@ -3,13 +3,14 @@
 # exit on error
 set -e
 
-# arr=( broot ncurses libevent tmux )
-arr=( broot )
+# arr=( broot ncursesw ncurses libevent tmux )
+arr=( ncursesw )
 
 for tool in "${arr[@]}"
 do
     PREFIX=$HOME/local/stow/$tool
 
+    mkdir -p $PREFIX
     cd $PREFIX/../
     stow -D $tool
     rm -rfv $PREFIX
@@ -26,6 +27,9 @@ do
                 ;;  
             ncurses)  
                 package=$tool-6.1.tar.gz
+                ;;  
+            ncursesw)  
+                package=ncurses-6.1.tar.gz
                 ;;  
             broot)  
                 package=$tool-x86_64-linux.tar.gz
@@ -67,8 +71,8 @@ do
                     ../configure --prefix=$PREFIX CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
                     CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib" make
                     ;;  
-                ncurses)  
-                    ../configure --prefix=$PREFIX # --enable-widec
+                ncursesw)  
+                    ../configure --prefix=$PREFIX --enable-widec
                     make
                     ;;  
                 *)  
@@ -81,9 +85,10 @@ do
             make install
         fi
 
-
-        cd $PREFIX/../
-        stow $tool
+        if [ $tool != "ncursesw" ]; then
+            cd $PREFIX/../
+            stow $tool
+        fi
 
         # cleanup
         rm -rf $TMP
