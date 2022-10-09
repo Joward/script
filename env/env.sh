@@ -3,14 +3,16 @@
 # exit on error
 set -e
 
-arr=( ncurses libevent tmux )
-# arr=( tmux )
+# arr=( broot ncurses libevent tmux )
+arr=( broot )
 
 for tool in "${arr[@]}"
 do
-#   rm -rfv /home/mac/local/stow/$tool
-
     PREFIX=$HOME/local/stow/$tool
+
+    cd $PREFIX/../
+    stow -D $tool
+    rm -rfv $PREFIX
 
     if [ -d "${PREFIX}" ]; then
         echo "Info :: $tool is found in $PREFIX "
@@ -24,6 +26,9 @@ do
                 ;;  
             ncurses)  
                 package=$tool-6.1.tar.gz
+                ;;  
+            broot)  
+                package=$tool-x86_64-linux.tar.gz
                 ;;  
             *)  
                 echo "Error :: package name is not defined for $tool"
@@ -46,27 +51,37 @@ do
         tar xvzf $tool.tar.gz -C $TMP/src --strip-components=1
         cd src/build
 
-        case $tool in  
-            libevent)  
-                ../configure --prefix=$PREFIX --disable-shared
-                make
-                ;;  
-            tmux)  
-                ../configure --prefix=$PREFIX CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
-                CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib" make
-                ;;  
-            ncurses)  
-                ../configure --prefix=$PREFIX # --enable-widec
-                make
-                ;;  
-            *)  
-                ../configure --prefix=$PREFIX
-                make
-                ;;  
-        esac
+        if [ $tool = "broot" ]; then
+            echo "$tool already have precompiled binaries"
 
-        mkdir -p $PREFIX
-        make install
+            mkdir -p $PREFIX/bin
+            cp -vr ../$tool $PREFIX/bin
+            chmod +x $PREFIX/bin/*
+        else
+            case $tool in  
+                libevent)  
+                    ../configure --prefix=$PREFIX --disable-shared
+                    make
+                    ;;  
+                tmux)  
+                    ../configure --prefix=$PREFIX CFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-L$HOME/local/lib -L$HOME/local/include/ncurses -L$HOME/local/include"
+                    CPPFLAGS="-I$HOME/local/include -I$HOME/local/include/ncurses" LDFLAGS="-static -L$HOME/local/include -L$HOME/local/include/ncurses -L$HOME/local/lib" make
+                    ;;  
+                ncurses)  
+                    ../configure --prefix=$PREFIX # --enable-widec
+                    make
+                    ;;  
+                *)  
+                    ../configure --prefix=$PREFIX
+                    make
+                    ;;  
+            esac
+
+            mkdir -p $PREFIX
+            make install
+        fi
+
+
         cd $PREFIX/../
         stow $tool
 
