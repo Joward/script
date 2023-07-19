@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# exit on error
+set -e
+
+# # shell
+source ./zsh.sh
+# oh my zsh
+# fzf
+# 
+# # lib
+# ncurses
+# 
+# # tool
+# stow
+# screen
+# git
+# vim
+# 
+# #TUI
+# broot
+# clex
+# htop
+# tig

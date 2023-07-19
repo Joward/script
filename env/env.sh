@@ -34,6 +34,9 @@ do
             broot)  
                 package=$tool-x86_64-linux.tar.gz
                 ;;  
+            fzf)  
+                package=$tool-0.31.0-linux_amd64.tar.gz
+                ;;  
             *)  
                 echo "Error :: package name is not defined for $tool"
                 exit 1
@@ -52,16 +55,29 @@ do
 
         # extract files, configure, and compile
         mkdir -p $TMP/src/build
-        tar xvzf $tool.tar.gz -C $TMP/src --strip-components=1
-        cd src/build
 
         if [ $tool = "broot" ]; then
+            tar xvzf $tool.tar.gz -C $TMP/src --strip-components=1
+            cd src/build
+
+            echo "$tool already have precompiled binaries"
+
+            mkdir -p $PREFIX/bin
+            cp -vr ../$tool $PREFIX/bin
+            chmod +x $PREFIX/bin/*
+        elif [ $tool = "fzf" ]; then
+            tar xvzf $tool.tar.gz -C $TMP/src --strip-components=0
+            cd src/build
+
             echo "$tool already have precompiled binaries"
 
             mkdir -p $PREFIX/bin
             cp -vr ../$tool $PREFIX/bin
             chmod +x $PREFIX/bin/*
         else
+            tar xvzf $tool.tar.gz -C $TMP/src --strip-components=1
+            cd src/build
+
             case $tool in  
                 libevent)  
                     ../configure --prefix=$PREFIX --disable-shared
