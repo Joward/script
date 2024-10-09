@@ -3,7 +3,7 @@
 export WORKSPACE=${HOME}/workspace
 export CONTAINER=$(basename "$0" .sh)
 
-mkdir -p ${WORKSPACE}/${CONTAINER}
+# mkdir -p ${WORKSPACE}/${CONTAINER}
 cd ${WORKSPACE}/${CONTAINER}
 pwd
 
