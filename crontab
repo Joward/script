@@ -1,6 +1,6 @@
-05 00 * * * crontab /root/local/script/crontab > /dev/null 2>&1
 
 # Daily Jobs
+05 00 * * * crontab /root/local/script/crontab > /dev/null 2>&1
 05 01 * * * . /etc/profile; sh /root/local/script/update.sh > /dev/null 2>&1
 
 # 05 02 * * * sh /root/local/script/docker/tiddlywiki.sh > /dev/null 2>&1
