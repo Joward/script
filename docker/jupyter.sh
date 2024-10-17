@@ -19,3 +19,5 @@ jupyter/base-notebook
 sleep 12
 docker logs ${CONTAINER}
 
+
+## TODO: remove login password
