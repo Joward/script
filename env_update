@@ -3,6 +3,13 @@
 # exit on error
 set -e
 
+# dotfiles
+cd
+git clone ssh://ubuntu@192.168.5.55/mnt/mmcblk1p1/gitweb/dotfiles.git
+
+# stow
+# CPAN
+
 # # shell
 source ./zsh.sh
 # oh my zsh
