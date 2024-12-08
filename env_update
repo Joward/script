@@ -3,29 +3,69 @@
 # exit on error
 set -e
 
-# dotfiles
-cd
-git clone ssh://ubuntu@192.168.5.55/mnt/mmcblk1p1/gitweb/dotfiles.git
+#sudo
+# visudo
 
-# stow
-# CPAN
+#yum repo
+# /etc/yum.repos.d/CentOS-Base.repo
+
+echo_info() {
+    local message="$1"
+    echo " ==== Info :: $message ... ==== "
+}
+
+echo_info "update yum cache"
+# sudo yum makecache
+# sudo yum install epel-release
+
+tool_install() {
+    local name="$1"
+
+    local command_path=$(which $name)
+
+    if [ -n "$command_path" ]; then
+        echo_info "$name 命令可用，路径为：$command_path"
+    else
+        echo_info "$name 命令不可用, begin instal $name"
+        sudo yum install $name
+    fi
+}
+
+# tool
+tool_install "htop"
+tool_install "screen"
+tool_install "stow"
+tool_install "tig"
+tool_install "zsh"
+
+# dotfiles
+if [[ -e ${HOME}/dotfiles ]]; then
+    echo_info "dotfiles is already exist"
+else
+    git clone ssh://ubuntu@192.168.5.55/mnt/mmcblk1p1/gitweb/dotfiles.git ${HOME}/dotfiles
+fi
+
+cd ${HOME}/dotfiles
+# stow mutt
+# stow ssh
+# stow tmux
+# stow wmii
+stow X11
+stow csh
+stow git
+stow screen
+stow vim
+
 
 # # shell
-source ./zsh.sh
+# source ./zsh.sh
 # oh my zsh
 # fzf
 # 
 # # lib
 # ncurses
 # 
-# # tool
-# stow
-# screen
-# git
-# vim
 # 
 # #TUI
 # broot
 # clex
-# htop
-# tig
