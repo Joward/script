@@ -56,16 +56,65 @@ stow git
 stow screen
 stow vim
 
+# oh my zsh
+if [[ -e ${HOME}/.oh-my-zsh ]]; then
+    echo_info "oh_my_zsh is already exist"
+else
+    sh -c "$(wget -O- https://gitee.com/pocmon/ohmyzsh/raw/master/tools/install.sh)"
+fi
+
+# ~/.zshrc
+# ZSH_THEME="bira"
+
+mkdir -p ${HOME}/local/package
+cd ${HOME}/local/package
+
+# ncurses
+lib_install() {
+    local name="$1"
+
+    echo_info "$name 命令不可用, begin instal $name"
+    sudo yum install $name
+}
+
+# lib_install "ncurses-devel"
+
+clex_install() {
+    if [[ -e ${HOME}/local/package/clex-4.7.tar.gz ]]; then
+        echo_info "clex-4.7.tar.gz is already exist"
+    else
+        wget https://github.com/xitop/clex/releases/download/v4.7/clex-4.7.tar.gz
+    fi
+
+    if [[ -e ${HOME}/local/package/clex-4.7 ]]; then
+        echo_info "clex-4.7 is already exist"
+    else
+        tar -zxvf clex-4.7.tar.gz
+    fi
+
+    cd clex-4.7
+    ./configure
+    make
+    sudo make install
+}
+
+pkg_install() {
+    local name="$1"
+
+    local command_path=$(which $name)
+
+    if [ -n "$command_path" ]; then
+        echo_info "$name 命令可用，路径为：$command_path"
+    else
+        echo_info "$name 命令不可用, begin instal $name"
+
+        ${name}_install
+    fi
+}
+pkg_install "clex"
 
 # # shell
-# source ./zsh.sh
-# oh my zsh
 # fzf
-# 
-# # lib
-# ncurses
-# 
 # 
 # #TUI
 # broot
-# clex
