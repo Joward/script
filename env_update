@@ -15,8 +15,42 @@ echo_info() {
 }
 
 echo_info "update yum cache"
-# sudo yum makecache
-# sudo yum install epel-release
+sudo yum makecache
+
+sudo yum install epel-release
+sudo yum makecache
+
+mkdir -p ${HOME}/local/package
+cd ${HOME}/local/package
+
+# ncurses
+lib_install() {
+    local name="$1"
+
+    echo_info "$name 命令不可用, begin instal $name"
+    sudo yum install $name
+}
+
+lib_install "ncurses-devel"
+
+clex_install() {
+    if [[ -e ${HOME}/local/package/clex-4.7.tar.gz ]]; then
+        echo_info "clex-4.7.tar.gz is already exist"
+    else
+        wget https://github.com/xitop/clex/releases/download/v4.7/clex-4.7.tar.gz
+    fi
+
+    if [[ -e ${HOME}/local/package/clex-4.7 ]]; then
+        echo_info "clex-4.7 is already exist"
+    else
+        tar -zxvf clex-4.7.tar.gz
+    fi
+
+    cd clex-4.7
+    ./configure
+    make
+    sudo make install
+}
 
 tool_install() {
     local name="$1"
@@ -27,7 +61,13 @@ tool_install() {
         echo_info "$name 命令可用，路径为：$command_path"
     else
         echo_info "$name 命令不可用, begin instal $name"
-        sudo yum install $name
+
+        case $name in
+            clex)
+            ${name}_install;;
+            *)
+            sudo yum install $name ;;
+        esac
     fi
 }
 
@@ -37,6 +77,9 @@ tool_install "screen"
 tool_install "stow"
 tool_install "tig"
 tool_install "zsh"
+tool_install "clex"
+# tool_install "fzf"
+# tool_install "broot"
 
 # dotfiles
 if [[ -e ${HOME}/dotfiles ]]; then
@@ -65,56 +108,3 @@ fi
 
 # ~/.zshrc
 # ZSH_THEME="bira"
-
-mkdir -p ${HOME}/local/package
-cd ${HOME}/local/package
-
-# ncurses
-lib_install() {
-    local name="$1"
-
-    echo_info "$name 命令不可用, begin instal $name"
-    sudo yum install $name
-}
-
-# lib_install "ncurses-devel"
-
-clex_install() {
-    if [[ -e ${HOME}/local/package/clex-4.7.tar.gz ]]; then
-        echo_info "clex-4.7.tar.gz is already exist"
-    else
-        wget https://github.com/xitop/clex/releases/download/v4.7/clex-4.7.tar.gz
-    fi
-
-    if [[ -e ${HOME}/local/package/clex-4.7 ]]; then
-        echo_info "clex-4.7 is already exist"
-    else
-        tar -zxvf clex-4.7.tar.gz
-    fi
-
-    cd clex-4.7
-    ./configure
-    make
-    sudo make install
-}
-
-pkg_install() {
-    local name="$1"
-
-    local command_path=$(which $name)
-
-    if [ -n "$command_path" ]; then
-        echo_info "$name 命令可用，路径为：$command_path"
-    else
-        echo_info "$name 命令不可用, begin instal $name"
-
-        ${name}_install
-    fi
-}
-pkg_install "clex"
-
-# # shell
-# fzf
-# 
-# #TUI
-# broot
