@@ -92,6 +92,28 @@ stow_install() {
     make install
 }
 
+delta_install() {
+    local pkg_name="delta-0.18.2-x86_64-unknown-linux-musl"
+    cd ${HOME}/local/package
+
+    if [[ -e ${HOME}/local/package/${pkg_name}.tar.gz ]]; then
+        echo_info "${pkg_name}.tar.gz is already exist"
+    else
+        wget https://github.com/dandavison/delta/releases/download/0.18.2/${pkg_name}.tar.gz
+    fi
+
+    if [[ -e ${HOME}/local/package/${pkg_name} ]]; then
+        echo_info "${pkg_name} is already exist"
+    else
+        tar -zxvf ${pkg_name}.tar.gz
+    fi
+
+    mkdir -p ${HOME}/local/tools/delta/bin
+    cp -vr ${HOME}/local/package/${pkg_name}/delta ${HOME}/local/tools/delta/bin/
+
+    chmod +x ${HOME}/local/tools/delta/bin/delta
+}
+
 fzf_install() {
     git clone --depth 1 https://github.com/junegunn/fzf.git ${HOME}/.fzf
     ${HOME}/.fzf/install
@@ -135,12 +157,12 @@ tool_install "zsh"
 tool_install "clex"
 tool_install "fzf"
 tool_install "broot"
+tool_install "delta"
 
 local_publish() {
     cd ${HOME}/local/tools
-    local list=(broot clex stow)
 
-    for i in ${list[*]}; do
+    for i in * ; do
         ${HOME}/local/tools/stow/bin/stow $i || exit -1
     done
 }
