@@ -186,7 +186,7 @@ for i in ${list[*]}; do
 done
 
 
-# oh my zs
+# oh my zsh
 if [[ -e ${HOME}/.oh-my-zsh ]]; then
     echo_info "oh_my_zsh is already exist"
 else
@@ -198,3 +198,16 @@ fi
 # ZSH_THEME="bira"
 # PATH
 # plugin
+
+if [[ -e ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]]; then
+    echo_info "zsh-autosuggestions is already exist"
+else
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+fi
+
+if [[ -e ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]]; then
+    echo_info "zsh-syntax-highlighting is already exist"
+else
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+fi
+
