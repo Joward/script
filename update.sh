@@ -9,3 +9,5 @@ git commit -m "daily update script files"
  
 git add .
 
+git push
+
