@@ -5,3 +5,4 @@
 
 # 05 02 * * * sh ${HOME}/local/script/docker/tiddlywiki.sh > /dev/null 2>&1
 
+08 18 * * * sh /scratch/noclean/canghaiv2_t_scratch/user/mxiong/PN99/test/tvg/files/vcs_files/build/dut/run_vcs64.bsub > /dev/null 2>&1
