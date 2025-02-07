@@ -157,6 +157,29 @@ broot_install() {
     chmod +x ${HOME}/local/tools/broot/bin/broot
 }
 
+bcompare_install() {
+    local pkg_name="bcompare-4.4.7.28397"
+    cd ${HOME}/local/package
+
+    if [[ -e ${HOME}/local/package/${pkg_name}.x86_64.tar.gz ]]; then
+        echo_info "${pkg_name}.tar.gz is already exist"
+    else
+        wget https://www.scootersoftware.com/files/${pkg_name}.x86_64.tar.gz
+    fi
+
+    if [[ -e ${HOME}/local/package/${pkg_name} ]]; then
+        echo_info "${pkg_name} is already exist"
+    else
+        tar -zxvf ${pkg_name}.x86_64.tar.gz
+    fi
+
+    cd ${pkg_name}
+
+    mkdir -p ${HOME}/local/tools/bcompare
+    ./install.sh
+}
+
+
 tool_install() {
     local name="$1"
 
@@ -181,6 +204,7 @@ tool_install "fzf"
 tool_install "broot"
 tool_install "delta"
 tool_install "ncdu"
+tool_install "bcompare"
 
 local_publish() {
     cd ${HOME}/local/tools
