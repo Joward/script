@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# exit on error
+set -e
+
+export PATH=$HOME/local/bin:/usr/local/bin:/tools/bin:$PATH
+
+#sudo
+# visudo
+
+#yum repo
+# /etc/yum.repos.d/CentOS-Base.repo
+
+echo_info() {
+    local message="$1"
+    echo " ==== Info :: $message ... ==== "
+}
+
+repo_update() {
+    local name="$1"
+
+    case $name in
+        VDI)
+            echo_info "This platform is VDI";;
+        centos)
+            echo_info "update yum cache"
+            sudo yum makecache
+
+            sudo yum install epel-release
+            sudo yum makecache;;
+        *)
+            echo_info "This platform is unknown"
+            exit -1;;
+    esac
+}
+
+repo_update "VDI"
+
+mkdir -p ${HOME}/local/package
+cd ${HOME}/local/package
+
+bcompare_install() {
+    local pkg_name="bcompare-4.4.7.28397"
+    cd ${HOME}/local/package
+
+    if [[ -e ${HOME}/local/package/${pkg_name}.x86_64.tar.gz ]]; then
+        echo_info "${pkg_name}.tar.gz is already exist"
+    else
+        wget https://www.scootersoftware.com/files/${pkg_name}.x86_64.tar.gz
+    fi
+
+    if [[ -e ${HOME}/local/package/${pkg_name} ]]; then
+        echo_info "${pkg_name} is already exist"
+    else
+        tar -zxvf ${pkg_name}.x86_64.tar.gz
+    fi
+
+    cd ${pkg_name}
+
+    mkdir -p ${HOME}/local/tools/bcompare
+    ./install.sh
+}
+
+tool_install() {
+    local name="$1"
+
+    local command_path=$(which $name)
+
+    if [ -n "$command_path" ]; then
+        echo_info "$name 命令可用，路径为：$command_path"
+    else
+        echo_info "$name 命令不可用, begin instal $name"
+        ${name}_install
+    fi
+}
+
+tool_install "bcompare"

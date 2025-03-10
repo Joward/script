@@ -3,6 +3,8 @@
 # exit on error
 set -e
 
+export PATH=$HOME/local/bin:/usr/local/bin:/tools/bin:$PATH
+
 #sudo
 # visudo
 
@@ -223,6 +225,7 @@ else
 fi
 
 cd ${HOME}/dotfiles
+rm -rfv ${HOME}/.zshrc
 # # stow mutt
 # # stow ssh
 # # stow tmux
