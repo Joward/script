@@ -2,7 +2,7 @@
 # Daily Jobs
 15 00 * * * . /etc/profile; crontab ${HOME}/local/script/crontab > /dev/null 2>&1
 05 01 * * * . /etc/profile; sh ${HOME}/local/script/update.sh > /dev/null 2>&1
-05 22 * * * . /etc/profile; sh /scratch/noclean/guild_dft_scratch/users/mxiong/script/flow/tools/regression.sh > /dev/null 2>&1
+25 01 * * * . /etc/profile; sh /scratch/noclean/guild_dft_scratch/users/mxiong/script/flow/tools/regression.sh > /dev/null 2>&1
 
 
 # 05 02 * * * sh ${HOME}/local/script/docker/tiddlywiki.sh > /dev/null 2>&1
